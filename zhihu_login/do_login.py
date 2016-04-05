@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 session = requests.session()
 
 #要提交的参数
-headers =   {
+headers =  {
                 "User_Agent":"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36",
                 "refer":"http://www.zhihu.com/"
             }
@@ -26,15 +26,15 @@ soup_one = BeautifulSoup(xsrf_url,'html.parser')
 xsrf = soup_one.body.find('div',{'class':'index-main'}).find('div',{'class':'index-main-body'}).form.find('input',{'name':'_xsrf'}).attrs['value']
 
 post_data1 = {
-                'phone_num':phone_num,
-                'password':password,
-                'remember_me':remember_me,
-                 '_xsrf':xsrf
+                'phone_num': phone_num,
+                'password': password,
+                'remember_me': remember_me,
+                 '_xsrf': xsrf
               }
 
-r = session.post('http://www.zhihu.com/login/phone_num',data=post_data1,headers=headers)
+r = session.post('http://www.zhihu.com/login/phone_num', data=post_data1, headers=headers)
 
-if(r.status_code == 200):
+if r.status_code == 200:
     print('模拟登陆成功')
 else:
     print('模拟登陆失败')

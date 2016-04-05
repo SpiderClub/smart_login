@@ -9,18 +9,18 @@ user_agents = ['Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKi
 account_password = []
 
 headers = {
-             'User_Agent':random.choice(user_agents),
-             'Referer':'https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F',
-             'Origin':'https://passport.weibo.cn',
-             'Host':'passport.weibo.cn'
+             'User_Agent': random.choice(user_agents),
+             'Referer': 'https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F',
+             'Origin': 'https://passport.weibo.cn',
+             'Host': 'passport.weibo.cn'
             }
 post_data = {
-              'username':'',
-              'password':'',
-              'savestate':'1',
-              'ec':'0',
-              'pagerefer':'https://passport.weibo.cn/signin/welcome?entry=mweibo&r=http%3A%2F%2Fm.weibo.cn%2F&wm=3349&vt=4',
-              'entry':'mweibo'
+              'username': '',
+              'password': '',
+              'savestate': '1',
+              'ec': '0',
+              'pagerefer': 'https://passport.weibo.cn/signin/welcome?entry=mweibo&r=http%3A%2F%2Fm.weibo.cn%2F&wm=3349&vt=4',
+              'entry': 'mweibo'
              }
 login_url = 'https://passport.weibo.cn/sso/login'
 
