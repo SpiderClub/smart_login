@@ -3,9 +3,8 @@
 import requests
 from bs4 import BeautifulSoup
 # 获取登陆页面
-# 提交post参数
-username = input('请输入用户名')
-password = input('请输入登陆密码')
+username = input('请输入用户名:')
+password = input('请输入密码:')
 session = requests.session()
 header = {
     'Host': 'passport.csdn.net',
@@ -25,7 +24,6 @@ soup = BeautifulSoup(login_page, 'html.parser')
 lt = soup.find(attrs={'name': 'lt'})['value']
 execution = soup.find(attrs={'name': 'execution'})['value']
 submit = soup.find(attrs={'name': '_eventId'})['value']
-
 post_data = {
                 'username': username,
                 'password': password,
@@ -34,10 +32,9 @@ post_data = {
                 '_eventId': submit
              }
 
-session.post(login_url, data=post_data)
+session.post(login_url, data=post_data, headers=header)
 home_page = 'http://my.csdn.net/my/mycsdn'
-r = requests.get(home_page, headers=header).text
+r = session.get(home_page, headers=header).text
 print(r)
-
 
 
