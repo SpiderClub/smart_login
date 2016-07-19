@@ -17,7 +17,6 @@ header = {
 }
 login_url = 'https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn'
 login_page = session.get(login_url, verify=False, headers=header).text
-
 # 提取lt, execution, _eventId
 soup = BeautifulSoup(login_page, 'html.parser')
 
