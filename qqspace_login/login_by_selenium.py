@@ -1,4 +1,3 @@
-# tested on ubuntu15.04
 from selenium import webdriver
 import time
 import requests
@@ -11,11 +10,15 @@ login_url = 'http://xui.ptlogin2.qq.com/cgi-bin/xlogin?proxy_url=http%3A//qzs.qq
             '%3Dizone%26specifyurl%3Dhttp%253A%252F%252Fuser.qzone.qq.com%252F1796246076&pt_qr_app=手机QQ空间' \
             '&pt_qr_link=http%3A//z.qzone.com/download.html&self_regurl=http%3A//qzs.qq.com/qzone/v6/reg/index.html' \
             '&pt_qr_help_link=http%3A//z.qzone.com/download.html'
-driver = webdriver.Firefox()
+login_name = input('请输入QQ号:')
+login_password = input('请输入QQ密码:')
+# 不知是不是selenium的版本问题还是操作平台问题，如今的selenium安装好了使用webdriver.Firefox()/webdriver.Chrome()可能会报错，在ide下并不会
+# 提示webdriver.*。遇到这种情况直接删除python安装目录下的selenium文件夹。这样import selenium.webdriver才是导入的site-packges目录下的webdriver模块
+driver = webdriver.Chrome(executable_path='D:/webdriver/chromedriver.exe')
 driver.get(login_url)
 time.sleep(3)
 
-login_type = driver.find_element_by_id('switch').find_element_by_id('switcher_plogin')
+login_type = driver.find_element_by_id('switcher_plogin')
 
 login_type.click()
 
@@ -23,8 +26,8 @@ username = driver.find_element_by_id('u')
 username.clear()
 password = driver.find_element_by_id('p')
 password.clear()
-username.send_keys('yourname')
-password.send_keys('yourpassword')
+username.send_keys(login_name)
+password.send_keys(login_password)
 
 submit = driver.find_element_by_id('login_button')
 submit.click()
