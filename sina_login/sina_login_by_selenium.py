@@ -1,40 +1,59 @@
-import time
+import re
 from selenium import webdriver
-import requests
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 
-# 该段代码在ubuntu上能成功运行，并没有在windows上面运行过
-# 直接登陆新浪微博
-url = 'http://weibo.com/login.php'
-driver = webdriver.PhantomJS()
-driver.get(url)
-print('开始登陆')
 
-# 定位到账号密码表单
-login_tpye = driver.find_element_by_class_name('info_header').find_element_by_xpath('//a[2]')
-login_tpye.click()
-time.sleep(3)
+def login(account, passwd, url):
+    # 如果driver没加入环境变量中，那么就需要明确指定其路径
+    # 验证于2017年2月20日
+    # 直接登陆新浪微博
+    driver = webdriver.PhantomJS(executable_path='/home/wpm/program/phantomjs/bin/phantomjs')
+    driver.maximize_window()
+    # locator = (By.)
+    driver.get(url)
+    print('开始登陆')
+    name_field = driver.find_element_by_id('loginname')
+    name_field.clear()
+    name_field.send_keys(account)
+    password_field = driver.find_element_by_class_name('password').find_element_by_name('password')
+    password_field.clear()
+    password_field.send_keys(passwd)
 
-name_field = driver.find_element_by_id('loginname')
-name_field.clear()
-name_field.send_keys('youraccount')
+    submit = driver.find_element_by_xpath('//*[@id="pl_login_form"]/div/div[3]/div[6]/a/span')
+    submit.click()
 
-password_field = driver.find_element_by_class_name('password').find_element_by_name('password')
-password_field.clear()
-password_field.send_keys('yourpassword')
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'WB_miniblog')))
 
-submit = driver.find_element_by_link_text('登录')
-submit.click()
+    source = driver.page_source
 
-# 等待页面刷新，完成登陆
-time.sleep(5)
-print('登陆完成')
-sina_cookies = driver.get_cookies()
+    if is_login(source):
+        print('登录成功')
 
-cookie = [item["name"] + "=" + item["value"] for item in sina_cookies]
-cookiestr = '; '.join(item for item in cookie)
+    sina_cookies = driver.get_cookies()
+    driver.quit()
+    return sina_cookies
 
-# 验证cookie是否有效
-redirect_url = 'http://weibo.com/p/1005051921017243/info?mod=pedit_more'
-headers = {'cookie': cookiestr}
-html = requests.get(redirect_url, headers=headers).text
-print(html)
+
+def is_login(source):
+    rs = re.search("CONFIG\['islogin'\]='(\d)'", source)
+    if rs:
+        return int(rs.group(1)) == 1
+    else:
+        return False
+
+
+if __name__ == '__main__':
+    url = 'http://weibo.com/login.php'
+    name_input = input('请输入你的账号\n')
+    passwd_input = input('请输入你的密码\n')
+    cookies = login(name_input, passwd_input, url)
+
+
+
+
+
+
+
+
