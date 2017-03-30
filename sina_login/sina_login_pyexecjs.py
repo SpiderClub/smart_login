@@ -66,15 +66,17 @@ def do_login(session, url):
 
 
 if __name__ == '__main__':
+    name = input('请输入登录用户名：\n')
+    password = input('请输入登录密码：\n')
     session = get_session()
     runntime = get_runntime('./sinalogin.js')
-    su = get_encodename('loginname', runntime)
+    su = get_encodename(name, runntime)
     post_url = 'http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)'
     prelogin_url = 'http://login.sina.com.cn/sso/prelogin.php?entry=weibo&callback=sinaSSOController.preloginCallBack&' \
                    'su=' + su + '&rsakt=mod&checkpin=1&client=ssologin.js(v1.4.18)'
 
     pre_obj = get_prelogin_info(prelogin_url, session)
-    sp = get_pass('password', pre_obj, runntime)
+    sp = get_pass(password, pre_obj, runntime)
 
     # 提交的数据可以根据抓包获得
     data = {
