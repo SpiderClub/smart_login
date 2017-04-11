@@ -1,15 +1,17 @@
 import re
+import time
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def login(account, passwd, url):
     # 如果driver没加入环境变量中，那么就需要明确指定其路径
-    # 验证于2017年2月20日
+    # 验证于2017年4月11日
     # 直接登陆新浪微博
-    driver = webdriver.PhantomJS(executable_path='/home/wpm/program/phantomjs/bin/phantomjs')
+    driver = webdriver.Chrome(executable_path='/Users/resolvewang/Documents/program/driver/chromedriver')
     driver.maximize_window()
     # locator = (By.)
     driver.get(url)
@@ -22,8 +24,9 @@ def login(account, passwd, url):
     password_field.send_keys(passwd)
 
     submit = driver.find_element_by_xpath('//*[@id="pl_login_form"]/div/div[3]/div[6]/a/span')
-    submit.click()
 
+    ActionChains(driver).double_click(submit).perform()
+    time.sleep(5)
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'WB_miniblog')))
 
     source = driver.page_source
