@@ -95,10 +95,4 @@ ENV/
 # Rope project settings
 .ropeproject
 
-.idea/markdown-navigator.xml
-.idea/markdown-navigator/
-.idea/misc.xml
-.idea/modules.xml
-.idea/smart_login.iml
-.idea/workspace.xml
-.idea/inspectionProfiles/profiles_settings.xml
+.idea
