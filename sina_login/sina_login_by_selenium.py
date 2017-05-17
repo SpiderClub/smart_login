@@ -11,7 +11,7 @@ def login(account, passwd, url):
     # 如果driver没加入环境变量中，那么就需要明确指定其路径
     # 验证于2017年4月11日
     # 直接登陆新浪微博
-    driver = webdriver.Chrome(executable_path='/Users/resolvewang/Documents/program/driver/chromedriver')
+    driver = webdriver.Chrome('/Users/resolvewang/Documents/program/driver/chromedriver')
     driver.maximize_window()
     # locator = (By.)
     driver.get(url)

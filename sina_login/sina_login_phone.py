@@ -24,6 +24,7 @@ post_data = {
     'pagerefer': 'https://passport.weibo.cn/signin/welcome?entry=mweibo&r=http%3A%2F%2Fm.weibo.cn%2F&wm=3349&vt=4',
     'entry': 'mweibo'
 }
+# 这个入口仍然有效
 login_url = 'https://passport.weibo.cn/sso/login'
 
 
