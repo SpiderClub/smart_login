@@ -2,10 +2,13 @@
 import time
 import base64
 import rsa
+import math
+import random
 import binascii
 import requests
 import re
 from urllib.parse import quote_plus
+from sina_login.code_verification import code_verificate
 
 # 构造 Request headers
 agent = 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0'
@@ -17,6 +20,24 @@ session = requests.session()
 
 # 访问 初始页面带上 cookie
 index_url = "http://weibo.com/login.php"
+yundama_username = ''
+yundama_password = ''
+verify_code_path = './pincode.png'
+
+
+def get_pincode_url(pcid):
+    size = 0
+    url = "http://login.sina.com.cn/cgi/pin.php"
+    pincode_url = '{}?r={}&s={}&p={}'.format(url, math.floor(random.random() * 100000000), size, pcid)
+    return pincode_url
+
+
+def get_img(url):
+    resp = requests.get(url, headers=headers, stream=True)
+    with open(verify_code_path, 'wb') as f:
+        for chunk in resp.iter_content(1000):
+            f.write(chunk)
+
 
 def get_su(username):
     """
@@ -39,6 +60,7 @@ def get_server_data(su):
     sever_data = eval(pre_data_res.content.decode("utf-8").replace("sinaSSOController.preloginCallBack", ''))
 
     return sever_data
+
 
 # 这一段用户加密密码，需要参考加密文件
 def get_password(password, servertime, nonce, pubkey):
@@ -82,6 +104,19 @@ def login(username, password):
         'url': 'http://weibo.com/ajaxlogin.php?framelogin=1&callback=parent.sinaSSOController.feedBackUrlCallBack',
         'returntype': 'META'
         }
+
+    need_pin = sever_data['showpin']
+    if need_pin == 1:
+        # 你也可以改为手动填写验证码
+        if not yundama_username:
+            raise Exception('由于本次登录需要验证码，请配置顶部位置云打码的用户名{}和及相关密码'.format(yundama_username))
+        pcid = sever_data['pcid']
+        postdata['pcid'] = pcid
+        img_url = get_pincode_url(pcid)
+        get_img(img_url)
+        verify_code = code_verificate(yundama_username, yundama_password, verify_code_path)
+        postdata['door'] = verify_code
+
     login_url = 'http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)'
     login_page = session.post(login_url, data=postdata, headers=headers)
     login_loop = (login_page.content.decode("GBK"))
@@ -94,11 +129,11 @@ def login(username, password):
     web_weibo_url = "http://weibo.com/%s/profile?topnav=1&wvr=6&is_all=1" % uuid_res
     weibo_page = session.get(web_weibo_url, headers=headers)
     weibo_pa = r'<title>(.*?)</title>'
-    userName = re.findall(weibo_pa, weibo_page.content.decode("utf-8", 'ignore'), re.S)[0]
-    print('登陆成功，你的用户名为：'+userName)
+    user_name = re.findall(weibo_pa, weibo_page.content.decode("utf-8", 'ignore'), re.S)[0]
+    print('登陆成功，你的用户名为：'+user_name)
 
 
 if __name__ == "__main__":
-    username = input(u'用户名：')
-    password = input(u'密码：')
+    username = input('微博用户名：')
+    password = input('微博密码：')
     login(username, password)
