@@ -3,24 +3,33 @@ import time
 from selenium import webdriver
 
 
-# 强东的系统登陆模块没有用iframe,定位也没有微博那么复杂，可以靠id定位登陆
-login_url = 'https://passport.jd.com/new/login.aspx'
-driver = webdriver.PhantomJS()
-driver.get(login_url)
-time.sleep(5)
+def login(login_url, login_name, login_passwd):
+    driver = webdriver.Chrome()
+    driver.get(login_url)
+    time.sleep(5)
 
-account = driver.find_element_by_id('loginname')
-password = driver.find_element_by_id('nloginpwd')
-submit = driver.find_element_by_id('loginsubmit')
+    login_tab_right = driver.find_element_by_class_name('login-tab-r')
+    login_tab_right.click()
 
-account.clear()
-password.clear()
-account.send_keys('yourname')
-password.send_keys('yourpassword')
+    account = driver.find_element_by_id('loginname')
+    password = driver.find_element_by_id('nloginpwd')
+    submit = driver.find_element_by_id('loginsubmit')
 
-submit.click()
-time.sleep(5)
+    account.clear()
+    password.clear()
+    account.send_keys(login_name)
+    password.send_keys(login_passwd)
 
-# cookie和前面一样的方式获取和保存
-cookies = driver.get_cookies()
-driver.close()
+    submit.click()
+    time.sleep(5)
+
+    jd_cookies = driver.get_cookies()
+    driver.close()
+    return jd_cookies
+
+if __name__ == '__main__':
+    url = 'https://passport.jd.com/new/login.aspx'
+    name = input('请输入用户名:\n')
+    password = input('请输入密码:\n')
+    cookies = login(url, name, password)
+    print(cookies)
