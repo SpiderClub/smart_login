@@ -5,14 +5,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ChromeOptions
 
 
 def login(account, passwd, url):
     # 如果driver没加入环境变量中，那么就需要明确指定其路径
     # 验证于2017年4月11日
     # 直接登陆新浪微博
-    driver = webdriver.Chrome('/Users/resolvewang/Documents/program/driver/chromedriver')
+    chrome_options = ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    driver = webdriver.Chrome('/root/qk_python/python/data/collect/weibo_spider/priv/chromedriver',
+                              chrome_options=chrome_options)
     driver.maximize_window()
+    driver.set_page_load_timeout(30)
+    driver.set_window_size(1124, 850)
     # locator = (By.)
     driver.get(url)
     print('开始登陆')
